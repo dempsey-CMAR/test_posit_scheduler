@@ -6,52 +6,56 @@ editor_options:
 echo: true
 ---
 
-```{r}
-#| message: false
-#| warning: false
+```{python}
+import pandas as pd
+import duckdb
+import os
+import yaml
+from datetime import datetime
+from pathlib import Path
 
-library(DT)
-library(dplyr)
-library(ggplot2)
-library(googlesheets4)
-library(plotly)
-#library(pins)
+# Load configuration from YAML file
+with open("config.yml", "r") as config_file:
+    config = yaml.safe_load(config_file)
 
-# ss_url <- "https://docs.google.com/spreadsheets/d/1a4f3XpaKxjAVw6QarHZseZXR5N7KfYG_gYCxx0K-bWo/edit?usp=sharing"
+os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
 
-# Google Sheets setup - ADD THIS SECTION
-SHEET_ID <- Sys.getenv("GOOGLE_SHEETS_URL")  # Replace with your actual sheet ID
-SHEET_NAME <-  Sys.getenv("GOOGLE_SHEETS_NAME")  # Replace with your actual sheet ID
+# DuckDB and MotherDuck configuration
+MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", "")
+DATABASE_NAME = "test_connect_cloud_db"
+LOCAL_DB_PATH = None
 
-# Authenticate with Google (you'll need to do this once)
-#gs4_auth() # Uncomment this line for first-time setup
+try:
+    if MOTHERDUCK_TOKEN:
+        # Try MotherDuck first
+        conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
+        print("Connected to MotherDuck")
+    else:
+        # Fall back to local DuckDB
+        conn = duckdb.connect(LOCAL_DB_PATH)
+        print("Connected to local DuckDB")
+except Exception as e:
+    print(f"Error connecting to MotherDuck,: {e}")
+```
 
-dat_new <- data.frame(
-  date_time_utc = Sys.time(), value = round(rnorm(1), digits = 3)
-)
-
-# sheet_append(ss = SHEET_ID, data = dat_new, sheet = SHEET_NAME)
-# dat <- read_sheet(ss = SHEET_ID, sheet = SHEET_NAME) 
-
+```{python}
+# Update database with current timestamp and random value
+CURRENT_TIMESTAMP = datetime.utcnow()
+conn.execute(f"INSERT INTO test_connect_cloud_data VALUES ('{CURRENT_TIMESTAMP}', ROUND(RANDOM(), 3))")
 ```
 
 ## Table
-
-```{r}
-SHEET_ID
-```
-
-```{r}
-# dat %>% 
-#   datatable()
+```{python}
+# Display the contents of the table
+conn.sql("SELECT * FROM test_connect_cloud_data").show()
 ```
 
 ## Figure
 
-```{r}
-# p <- ggplot(dat, aes(date_time_utc, value)) +
-#   geom_point()
+```{python}
+# Create a plot of the data
+import plotly.express as px
+px.scatter(conn.sql("SELECT * FROM test_connect_cloud_data").df(), x="date_time_utc", y="value")
 
-# ggplotly(p)
 ```
 
