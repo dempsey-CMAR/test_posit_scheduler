@@ -1,0 +1,57 @@
+---
+title: "Test Scheduler On Posit Connect Cloud"
+format: html
+editor_options: 
+  chunk_output_type: console
+echo: true
+---
+
+```{r}
+#| message: false
+#| warning: false
+
+library(DT)
+library(dplyr)
+library(ggplot2)
+library(googlesheets4)
+library(plotly)
+#library(pins)
+
+# ss_url <- "https://docs.google.com/spreadsheets/d/1a4f3XpaKxjAVw6QarHZseZXR5N7KfYG_gYCxx0K-bWo/edit?usp=sharing"
+
+# Google Sheets setup - ADD THIS SECTION
+SHEET_ID <- Sys.getenv("GOOGLE_SHEETS_URL")  # Replace with your actual sheet ID
+SHEET_NAME <-  Sys.getenv("GOOGLE_SHEETS_NAME")  # Replace with your actual sheet ID
+
+# Authenticate with Google (you'll need to do this once)
+#gs4_auth() # Uncomment this line for first-time setup
+
+dat_new <- data.frame(
+  date_time_utc = Sys.time(), value = round(rnorm(1), digits = 3)
+)
+
+# sheet_append(ss = SHEET_ID, data = dat_new, sheet = SHEET_NAME)
+# dat <- read_sheet(ss = SHEET_ID, sheet = SHEET_NAME) 
+
+```
+
+## Table
+
+```{r}
+SHEET_ID
+```
+
+```{r}
+# dat %>% 
+#   datatable()
+```
+
+## Figure
+
+```{r}
+# p <- ggplot(dat, aes(date_time_utc, value)) +
+#   geom_point()
+
+# ggplotly(p)
+```
+
