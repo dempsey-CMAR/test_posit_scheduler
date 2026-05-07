@@ -3,3 +3,4 @@ duckdb
 datetime
 pathlib
 jupyter
+plotly
