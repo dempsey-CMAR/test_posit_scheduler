@@ -15,10 +15,10 @@ from datetime import datetime
 from pathlib import Path
 
 # Load configuration from YAML file
-with open("config.yml", "r") as config_file:
-    config = yaml.safe_load(config_file)
+#with open("config.yml", "r") as config_file:
+#    config = yaml.safe_load(config_file)
 
-os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
+#os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
 
 # DuckDB and MotherDuck configuration
 MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", "")
