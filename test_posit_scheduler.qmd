@@ -16,15 +16,17 @@ from datetime import timezone
 from pathlib import Path
 
 # Load configuration from YAML file
-#with open("config.yml", "r") as config_file:
-#    config = yaml.safe_load(config_file)
+with open("config.yml", "r") as config_file:
+    config = yaml.safe_load(config_file)
 
-#os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
+os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
 
 # DuckDB and MotherDuck configuration
-MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", "ERROR: MISSING TOKEN")
+MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", None)
 DATABASE_NAME = "test_connect_cloud_db"
-LOCAL_DB_PATH = None
+
+if MOTHERDUCK_TOKEN is None:
+    raise EnvironmentError(f"Environment variable 'MOTHERDUCK_TOKEN' is not set.")
 
 try:
     conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
