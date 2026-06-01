@@ -21,19 +21,13 @@ from pathlib import Path
 #os.environ["MOTHERDUCK_TOKEN"] = config.get("MOTHERDUCK_TOKEN", "")
 
 # DuckDB and MotherDuck configuration
-MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", "")
+MOTHERDUCK_TOKEN = os.getenv("MOTHERDUCK_TOKEN", "ERROR: MISSING TOKEN")
 DATABASE_NAME = "test_connect_cloud_db"
 LOCAL_DB_PATH = None
 
 try:
-    if MOTHERDUCK_TOKEN:
-        # Try MotherDuck first
-        conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
-        print("Connected to MotherDuck")
-    else:
-        # Fall back to local DuckDB
-        conn = duckdb.connect(LOCAL_DB_PATH)
-        print("Connected to local DuckDB")
+    conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
+    print("Connected to MotherDuck")
 except Exception as e:
     print(f"Error connecting to MotherDuck,: {e}")
 ```
