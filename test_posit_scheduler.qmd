@@ -28,14 +28,9 @@ DATABASE_NAME = "test_connect_cloud_db"
 if MOTHERDUCK_TOKEN is None:
     raise EnvironmentError(f"Environment variable 'MOTHERDUCK_TOKEN' is not set.")
 
-# Try assigning the variable outside of the try block
+# Removed try block because it masked the error when the the connection was unsuccessful by printing it. The error will now be raised and visible in the console.
 conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
-
-try:
-    conn = duckdb.connect(f"md:{DATABASE_NAME}?motherduck_token={MOTHERDUCK_TOKEN}")
-    print("Connected to MotherDuck")
-except Exception as e:
-    print(f"Error connecting to MotherDuck,: {e}")
+print("Connected to MotherDuck")
 ```
 
 ```{python}
