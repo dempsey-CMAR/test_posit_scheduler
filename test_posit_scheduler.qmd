@@ -12,6 +12,7 @@ import duckdb
 import os
 import yaml
 from datetime import datetime
+from datetime import timezone
 from pathlib import Path
 
 # Load configuration from YAML file
@@ -34,7 +35,7 @@ except Exception as e:
 
 ```{python}
 # Update database with current timestamp and random value
-CURRENT_TIMESTAMP = datetime.utcnow()
+CURRENT_TIMESTAMP = datetime.now(timezone.utc)
 conn.execute(f"INSERT INTO test_connect_cloud_data VALUES ('{CURRENT_TIMESTAMP}', ROUND(RANDOM(), 3))")
 ```
 
